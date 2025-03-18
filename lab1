@@ -1,0 +1,143 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Node {
+public:
+    int age;
+    double height;
+    string name;
+    Node* next;
+
+    Node(int i, double d, string s) {
+        age = i;
+        height = d;
+        name = s;
+        next = nullptr;
+    }
+};
+
+class LinkedList {
+private:
+    Node* head;
+
+public:
+    LinkedList() {
+        head = nullptr;
+    }
+
+    void print() {
+        Node* temp = head;
+        while (temp != nullptr) {
+            cout << "Age: " << temp->age << ", Height: " << temp->height 
+                 << ", Name: " << temp->name << endl;
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+    void addToEnd(int i, double d, string s) {
+        Node* newNode = new Node(i, d, s);
+        if (head == nullptr) {
+            head = newNode;
+        } else {
+            Node* temp = head;
+            while (temp->next != nullptr) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+
+    void addToBeginning(int i, double d, string s) {
+        Node* newNode = new Node(i, d, s);
+        newNode->next = head;
+        head = newNode;
+    }
+
+    void addAfterIndex(int index, int i, double d, string s) {
+        Node* temp = head;
+        int count = 0;
+
+        while (temp != nullptr && count < index) {
+            temp = temp->next;
+            count++;
+        }
+
+        if (temp != nullptr) {
+            Node* newNode = new Node(i, d, s);
+            newNode->next = temp->next;
+            temp->next = newNode;
+        } else {
+            cout << "Index out of bounds." << endl;
+        }
+    }
+ void addBefore(string ind, int i, double d, string s) {
+     if (head == nullptr) return;
+
+     if (head->name == ind) { 
+         addToBeginning(i, d, s);
+         return;
+     }
+
+     Node* temp = head;
+     while (temp->next != nullptr && temp->next->name != ind) {
+         temp = temp->next;
+     }
+
+      if (temp != nullptr) {
+            Node* newNode = new Node(i, d, s);
+            newNode->next = temp->next;
+            temp->next = newNode;
+        } else {
+            cout << "person with name"  << ind << "' was not found" << endl;
+        }
+    }
+    void removebyage(int i) {
+        if (head == nullptr) return;
+
+        if (head->age == i) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+
+        Node* temp = head;
+        while (temp->next != nullptr && temp->next->age != i) {
+            temp = temp->next;
+        }
+
+        if (temp->next != nullptr) {
+            Node* toDelete = temp->next;
+            temp->next = temp->next->next;
+            delete toDelete;
+        }
+    }
+
+    ~LinkedList() {
+        Node* temp;
+        while (head != nullptr) {
+            temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+};
+
+int main() {
+    LinkedList list;
+    list.addToEnd(18, 167, "Alina");
+ list.addToBeginning(21, 150, "Anna");
+   list.addBefore("Alina", 12, 143, "Oleg");
+    list.addAfterIndex(2, 33, 170, "Kate");
+
+    cout << "Linked List after additions: " << endl;
+    list.print();
+
+    list.removebyage(21);
+    cout << "Linked List after deleting person with age value 21: " << endl;
+    list.print();
+
+    return 0;
+}
